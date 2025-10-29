@@ -71,32 +71,31 @@ export class Service {
     }
 
     async getPost(slug) {
-        try {
-            return await this.databases.getRow(
-                conf.appwriteDatabaseId,
-                conf.appwriteCollectionId,
-                slug
-            )
-        } catch (error) {
-            console.log("Appwrite service :: getPost :: error", error);
-            return false
-        }
-    }
+  try {
+    return await this.databases.getDocument(
+      conf.appwriteDatabaseId,
+      conf.appwriteCollectionId,
+      slug
+    );
+  } catch (error) {
+    console.log("Appwrite service :: getPost :: error", error);
+    return false;
+  }
+}
 
-    async listPosts(queries = [Query.equal("status", "active")]) {
-        try {
+async listPosts(queries = [Query.equal("status", "active")]) {
+  try {
+    return await this.databases.listDocuments(
+      conf.appwriteDatabaseId,
+      conf.appwriteCollectionId,
+      queries
+    );
+  } catch (error) {
+    console.log("Appwrite service :: listPosts :: error", error);
+    return false;
+  }
+}
 
-            return await this.databases.listRows(
-                conf.appwriteDatabaseId,
-                conf.appwriteCollectionId,
-                queries,
-            )
-
-        } catch (error) {
-            console.log("Appwrite service :: listPosts :: error", error);
-            return false
-        }
-    }
 
     // file upload service
     async uploadFile(file) {
@@ -127,7 +126,7 @@ export class Service {
     }
 
     getFileView(fileId){
-        return this.bucket.getFilePreview(
+        return this.bucket.getFileView(
             conf.appwriteBucketId,
             fileId
         )
